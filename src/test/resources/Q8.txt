@@ -1,0 +1,6 @@
+let sum k = sumRec 0 k
+where rec sumRec i k = 
+    i eq k -> k
+    | i + (sumRec (i + 1) k)
+in 
+    Print(sum 10)
