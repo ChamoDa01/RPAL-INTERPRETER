@@ -1,0 +1,8 @@
+let isPal n = 
+    n eq (Reverse n 0) -> 'Palindrome'
+    | 'Not Palindrome'
+where rec Reverse n r =  
+    n eq 0 -> r
+    | Reverse (n / 10) (r * 10 + (n - (n/10) * 10))
+in 
+    Print(isPal 14321)

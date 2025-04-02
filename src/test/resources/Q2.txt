@@ -1,0 +1,6 @@
+let getMax a b c = 
+    (a gr b & a gr c) -> a
+    | b gr c ->  b 
+    | c
+in 
+    Print(getMax 100 2 23)

@@ -1,0 +1,9 @@
+let rec Pal_range a b =
+    a ls b -> a eq (Reverse a 0) -> (Pal_range (a + 1) b, Print ' ', Print a)
+    | Pal_range (a + 1) b
+    | nil 
+where rec Reverse n r =  
+    n eq 0 -> r
+    | Reverse (n / 10) (r * 10 + (n - (n/10) * 10))
+in 
+    Pal_range 1 100

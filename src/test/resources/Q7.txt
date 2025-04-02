@@ -1,0 +1,6 @@
+let rec isOddorEven n = 
+    n eq 0 -> 'Even'
+    | n eq 1 -> 'Odd'
+    | isOddorEven (n - 2)
+in
+    Print(isOddorEven 5)
