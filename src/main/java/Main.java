@@ -1,4 +1,4 @@
-import LexicalAnalyzer.LexicalAnalyzer;
+import lexicalanalyzer.LexicalAnalyzer;
 
 public class Main {
     public static void main(String[] args) {

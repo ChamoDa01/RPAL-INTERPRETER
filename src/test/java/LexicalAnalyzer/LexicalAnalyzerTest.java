@@ -1,4 +1,4 @@
-package LexicalAnalyzer;
+package lexicalanalyzer;
 
 import org.junit.jupiter.api.Test;
 

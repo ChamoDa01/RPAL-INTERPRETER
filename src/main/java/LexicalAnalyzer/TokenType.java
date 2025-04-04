@@ -1,4 +1,4 @@
-package LexicalAnalyzer;
+package lexicalanalyzer;
 
 public enum TokenType {
     KEYWORD,

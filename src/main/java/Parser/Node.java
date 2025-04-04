@@ -1,14 +1,27 @@
-package Parser;
+package parser;
 
 public class Node {
-    private NodeType type;
     private String value;
-    private int numChildren; // Number of children this node can vary ex: tau
+    private NodeType type;
+    private int childrenCount;
 
-    public Node(NodeType type, String value, int numChildren) {
+    public Node(NodeType type, String value, int childrenCount) {
         this.type = type;
         this.value = value;
-        this.numChildren = numChildren;
+        this.childrenCount = childrenCount;
     }
- 
+
+    public NodeType getType() {
+        return type;
+    }
+
+    public String getValue(){
+        return value;
+    }
+
+    public int getChildrenCount(){
+        return childrenCount;
+    }
+
+
 }

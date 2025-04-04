@@ -1,4 +1,4 @@
-package Parser;
+package parser;
 
 public enum NodeType {
     let,
@@ -13,8 +13,8 @@ public enum NodeType {
     rec,
     aug,
     conditional,
-    or,
-    op_and, // Prefix op to discriminate between and, &
+    op_or,
+    op_and,
     op_not,
     op_compare,
     op_plus,

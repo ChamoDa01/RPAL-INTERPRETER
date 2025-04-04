@@ -1,4 +1,4 @@
-package LexicalAnalyzer;
+package lexicalanalyzer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import Exception.LexicalException;
+import exception.LexicalException;
 
 public class LexicalAnalyzer {
     private final String inputFile;

@@ -1,8 +1,8 @@
-package LexicalAnalyzer;
+package lexicalanalyzer;
 
 public class Token {
-    TokenType tokenType;
-    String tokenValue;
+    private TokenType tokenType;
+    private String tokenValue;
 
     public Token(TokenType tokenType, String tokenValue) {
         this.tokenType = tokenType;
@@ -21,5 +21,13 @@ public class Token {
             case END_OF_TOKENS -> "<END_OF_TOKENS>: " + tokenValue;
             default -> "<UNKNOWN>: " + tokenValue;
         };
+    }
+
+    public TokenType getTokenType(){
+        return tokenType;
+    }
+
+    public String getTokenValue(){
+        return tokenValue;
     }
 }
