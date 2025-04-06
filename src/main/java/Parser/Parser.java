@@ -1,0 +1,450 @@
+package parser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import lexicalanalyzer.Token;
+import lexicalanalyzer.TokenType;
+
+public class Parser {
+    private List<Token> tokenList;
+    private List<Node> parseStack;
+    private ArrayList<String> stringAST;
+
+    public Parser(List<Token> tokenList) {
+        this.tokenList = tokenList;
+        parseStack = new ArrayList<>();
+        stringAST = new ArrayList<>();
+    }
+
+    public Node parse() {
+        tokenList.add(new Token(TokenType.END_OF_TOKENS, ""));
+        E();
+        if (tokenList.getFirst().getTokenType().equals(TokenType.END_OF_TOKENS)) {
+            return parseStack.removeFirst();
+        } else {
+            System.out.println("Parsing Unsuccessful!");
+            return null;
+        }
+    }
+
+    void E() {
+        int n;
+        boolean parsing = true;
+
+        while (parsing) {
+            n = 0;
+            Token token = tokenList.getFirst();
+
+            if (token.getTokenType().equals(TokenType.KEYWORD) && Arrays.asList("let", "fn").contains(token.getTokenValue())) {
+
+                if (token.getTokenValue().equals("let")) {
+                    tokenList.removeFirst();
+                    D();
+
+                    if (!tokenList.getFirst().getTokenValue().equals("in")) {
+                        System.out.println("Parse error at E : 'in' Expected");
+                        return;
+                    }
+                    tokenList.removeFirst();
+                    continue;  // loop to parse E again
+
+                } else { // fn
+                    tokenList.removeFirst();
+                    do {
+                        Vb();
+                        n++;
+                    } while (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)
+                            || tokenList.getFirst().getTokenValue().equals("("));
+
+                    if (!tokenList.getFirst().getTokenValue().equals(".")) {
+                        System.out.println("Parse error at E : '.' Expected");
+                        return;
+                    }
+                    tokenList.removeFirst();
+                    continue;  // loop to parse E again
+                }
+            } else {
+                parsing = false;  // No more let/fn → break loop → parse Ew
+            }
+        }
+
+        Ew();  // Handle Ew when no let/fn found
+
+        // Build tree for let/fn if applicable
+        // (optional - if tree building is outside loop logic)
+    }
+
+
+
+    void Ew() {
+        T();
+        if (tokenList.getFirst().getTokenValue().equals("where")) {
+            tokenList.removeFirst();
+            Dr();
+            build_tree(new Node(NodeType.WHERE, "where", 2));
+        }
+    }
+
+    void T() {
+
+        Ta();
+        int n = 1;
+        while (tokenList.getFirst().getTokenValue().equals(",")) {
+            tokenList.removeFirst();
+            Ta();
+            ++n;
+        }
+        if (n > 1) {
+            build_tree(new Node(NodeType.TAU, "tau", n));
+        }
+    }
+
+    void Ta() {
+        Tc();
+        while (tokenList.getFirst().getTokenValue().equals("aug")) {
+            tokenList.removeFirst();
+            Tc();
+            build_tree(new Node(NodeType.AUG, "aug", 2));
+        }
+    }
+
+    void Tc() {
+        B();
+        if (tokenList.getFirst().getTokenValue().equals("->")) {
+            tokenList.removeFirst();
+            Tc();
+            if (!tokenList.getFirst().getTokenValue().equals("|")) {
+                System.out.println("Parse error at Tc: conditional '|' expected");
+            }
+            tokenList.removeFirst();
+            Tc();
+            build_tree(new Node(NodeType.CONDITION, "->", 3));
+        }
+    }
+
+    void B() {
+        Bt();
+        while (tokenList.getFirst().getTokenValue().equals("or")) {
+            tokenList.removeFirst();
+            Bt();
+            build_tree(new Node(NodeType.OP_OR, "or", 2));
+        }
+    }
+
+    void Bt() {
+        Bs();
+        while (tokenList.getFirst().getTokenValue().equals("&")) {
+            tokenList.removeFirst();
+            Bs();
+            build_tree(new Node(NodeType.OP_AND, "&", 2));
+        }
+    }
+
+    void Bs() {
+        if (tokenList.getFirst().getTokenValue().equals("not")) {
+            tokenList.removeFirst();
+            Bp();
+            build_tree(new Node(NodeType.OP_NOT, "not", 1));
+        } else
+            Bp();
+    }
+
+    void Bp() {
+        A();
+        Token token = tokenList.getFirst();
+        if (Arrays.asList(">", ">=", "<", "<=").contains(token.getTokenValue())
+                || Arrays.asList("gr", "ge", "ls", "le", "eq", "ne").contains(token.getTokenValue())) {
+
+            tokenList.removeFirst();
+            A();
+            switch (token.getTokenValue()) {
+                case ">":
+                    build_tree(new Node(NodeType.OP_COMPARE, "gr", 2));
+                    break;
+                case ">=":
+                    build_tree(new Node(NodeType.OP_COMPARE, "ge", 2));
+                    break;
+                case "<":
+                    build_tree(new Node(NodeType.OP_COMPARE, "ls", 2));
+                    break;
+                case "<=":
+                    build_tree(new Node(NodeType.OP_COMPARE, "le", 2));
+                    break;
+                default:
+                    build_tree(new Node(NodeType.OP_COMPARE, token.getTokenValue(), 2));
+                    break;
+            }
+        }
+    }
+
+    void A() {
+        if (tokenList.getFirst().getTokenValue().equals("+")) {
+            tokenList.removeFirst();
+            At();
+        } else if (tokenList.getFirst().getTokenValue().equals("-")) {
+            tokenList.removeFirst();
+            At();
+            build_tree(new Node(NodeType.OP_NEGATION, "neg", 1));
+        } else {
+            At();
+        }
+        while (Arrays.asList("+", "-").contains(tokenList.getFirst().getTokenValue())) {
+            Token currentToken = tokenList.getFirst();
+            tokenList.removeFirst();
+            At();
+            if (currentToken.getTokenValue().equals("+"))
+                build_tree(new Node(NodeType.OP_PLUS, "+", 2));
+            else
+                build_tree(new Node(NodeType.OP_MINUS, "-", 2));
+        }
+
+    }
+
+    void At() {
+        Af();
+        while (Arrays.asList("*", "/").contains(tokenList.getFirst().getTokenValue())) {
+            Token currentToken = tokenList.getFirst();
+            tokenList.removeFirst();
+            Af();
+            if (currentToken.getTokenValue().equals("*"))
+                build_tree(new Node(NodeType.OP_MUL, "*", 2));
+            else
+                build_tree(new Node(NodeType.OP_DIV, "/", 2));
+        }
+    }
+
+    void Af() {
+        Ap();
+        if (tokenList.getFirst().getTokenValue().equals("**")) {
+            tokenList.removeFirst();
+            Af();
+            build_tree(new Node(NodeType.OP_POW, "**", 2));
+        }
+    }
+
+    void Ap() {
+        R();
+        while (tokenList.getFirst().getTokenValue().equals("@")) {
+            tokenList.removeFirst();
+
+            if (!tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)) {
+                System.out.println("Parsing error at Ap: IDENTIFIER EXPECTED");
+            }
+            build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+            tokenList.removeFirst();
+
+            R();
+            build_tree(new Node(NodeType.AT, "@", 3));
+        }
+    }
+
+    void R() {
+        Rn();
+        while ((Arrays.asList(TokenType.IDENTIFIER, TokenType.INTEGER, TokenType.STRING)
+                .contains(tokenList.getFirst().getTokenType()))
+                || (Arrays.asList("true", "false", "nil", "dummy").contains(tokenList.getFirst().getTokenValue()))
+                || (tokenList.getFirst().getTokenValue().equals("("))) {
+
+            Rn();
+            build_tree(new Node(NodeType.GAMMA, "gamma", 2));
+        }
+    }
+
+    void Rn() {
+        switch (tokenList.getFirst().getTokenType()) {
+            case IDENTIFIER:
+                build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+                tokenList.removeFirst();
+                break;
+            case INTEGER:
+                build_tree(new Node(NodeType.INTEGER, tokenList.getFirst().getTokenValue(), 0));
+                tokenList.removeFirst();
+                break;
+            case STRING:
+                build_tree(new Node(NodeType.STRING, tokenList.getFirst().getTokenValue(), 0));
+                tokenList.removeFirst();
+                break;
+            case KEYWORD:
+                switch (tokenList.getFirst().getTokenValue()) {
+                    case "true":
+                        build_tree(new Node(NodeType.TRUE, tokenList.getFirst().getTokenValue(), 0));
+                        tokenList.removeFirst();
+                        break;
+                    case "false":
+                        build_tree(new Node(NodeType.FALSE, tokenList.getFirst().getTokenValue(), 0));
+                        tokenList.removeFirst();
+                        break;
+                    case "nil":
+                        build_tree(new Node(NodeType.NIL, tokenList.getFirst().getTokenValue(), 0));
+                        tokenList.removeFirst();
+                        break;
+                    case "dummy":
+                        build_tree(new Node(NodeType.DUMMY, tokenList.getFirst().getTokenValue(), 0));
+                        tokenList.removeFirst();
+                        break;
+                    default:
+                        System.out.println("Parse Error at Rn: Unexpected KEYWORD");
+                        break;
+                }
+                break;
+            case PUNCTUATION:
+                if (tokenList.getFirst().getTokenValue().equals("(")) {
+                    tokenList.removeFirst();
+
+                    E();
+
+                    if (!tokenList.getFirst().getTokenValue().equals(")")) {
+                        System.out.println("Parsing error at Rn: Expected a matching ')'");
+                    }
+                    tokenList.removeFirst();
+                } else
+                    System.out.println("Parsing error at Rn: Unexpected PUNCTUATION");
+                break;
+            default:
+                System.out.println("Parsing error at Rn: Expected a Rn, but got different");
+                break;
+        }
+    }
+
+    void D() {
+        Da();
+        if (tokenList.getFirst().getTokenValue().equals("within")) {
+            tokenList.removeFirst();
+            D();
+            build_tree(new Node(NodeType.WITHIN, "within", 2));
+        }
+    }
+
+    void Da() {
+        Dr();
+        int n = 1;
+        while (tokenList.getFirst().getTokenValue().equals("and")) {
+            tokenList.removeFirst();
+            Dr();
+            n++;
+        }
+        if (n > 1)
+            build_tree(new Node(NodeType.AND, "and", n));
+    }
+
+    void Dr() {
+        boolean isRec = false;
+        if (tokenList.getFirst().getTokenValue().equals("rec")) {
+            tokenList.removeFirst();
+            isRec = true;
+        }
+        Db();
+        if (isRec) {
+            build_tree(new Node(NodeType.REC, "rec", 1));
+        }
+    }
+
+    void Db() {
+        if (tokenList.getFirst().getTokenType().equals(TokenType.PUNCTUATION) && tokenList.getFirst().getTokenValue().equals("(")) {
+            tokenList.removeFirst();
+            D();
+            if (!tokenList.getFirst().getTokenValue().equals(")")) {
+                System.out.println("Parsing error at Db #1");
+            }
+            tokenList.removeFirst();
+        } else if (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)) {
+            if (tokenList.get(1).getTokenValue().equals("(") || tokenList.get(1).getTokenType().equals(TokenType.IDENTIFIER)) { // Expect
+                // a
+                // fcn_form
+                build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+                tokenList.removeFirst();
+                int n = 1;
+                do {
+                    Vb();
+                    n++;
+                } while (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER) || tokenList.getFirst().getTokenValue().equals("("));
+                if (!tokenList.getFirst().getTokenValue().equals("=")) {
+                    System.out.println("Parsing error at Db #2");
+                }
+                tokenList.removeFirst();
+                E();
+
+                build_tree(new Node(NodeType.FCN_FORM, "fcn_form", n + 1));
+
+            } else if (tokenList.get(1).getTokenValue().equals("=")) {
+                build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+                tokenList.removeFirst();
+                tokenList.removeFirst();
+                E();
+                build_tree(new Node(NodeType.EQUAL, "=", 2));
+            } else if (tokenList.get(1).getTokenValue().equals(",")) {
+                Vl();
+                if (!tokenList.getFirst().getTokenValue().equals("=")) {
+                    System.out.println("Parsing error at Db");
+                }
+                tokenList.removeFirst();
+                E();
+
+                build_tree(new Node(NodeType.EQUAL, "=", 2));
+            }
+        }
+    }
+
+    void Vb() {
+        if (tokenList.getFirst().getTokenType().equals(TokenType.PUNCTUATION) && tokenList.getFirst().getTokenValue().equals("(")) {
+            tokenList.removeFirst();
+            boolean isVl = false;
+
+            if (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)) {
+                Vl();
+                isVl = true;
+            }
+            if (!tokenList.getFirst().getTokenValue().equals(")")) {
+                System.out.println("Parse error unmatch )");
+            }
+            tokenList.removeFirst();
+            if (!isVl)
+                build_tree(new Node(NodeType.EMPTY_PARAMS, "()", 0));
+
+        } else if (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)) {
+            build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+            tokenList.removeFirst();
+        }
+    }
+
+    void Vl() {
+        int n = 0;
+        do {
+            if (n > 0) {
+                tokenList.removeFirst();
+            }
+            if (!tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)) {
+                System.out.println("Parse error: a ID was expected )");
+            }
+            build_tree(new Node(NodeType.IDENTIFIER, tokenList.getFirst().getTokenValue(), 0));
+            tokenList.removeFirst();
+            n++;
+        }
+
+        while (tokenList.getFirst().getTokenValue().equals(","));
+        if (n > 1) {
+            build_tree(new Node(NodeType.COMMA, ",", n));
+
+            }
+    }
+    void build_tree(Node node) {
+        int childrenCount = node.getChildrenCount();
+        List<Node> children = new ArrayList<>();
+        for (int i = 0; i < childrenCount; i++) {
+            children.add(0, parseStack.remove(parseStack.size() - 1)); // Pop from stack and add to children
+        }
+        node.setChildren(children); // Set the children to the node
+        parseStack.add(node); // Add the parent node back to the stack
+    }
+
+    
+    public List<Node> getParseStack() {
+        return Collections.unmodifiableList(parseStack);
+    }
+
+    
+ 
+}

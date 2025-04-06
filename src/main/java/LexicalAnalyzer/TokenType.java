@@ -6,7 +6,7 @@ public enum TokenType {
     INTEGER,
     OPERATOR,
     STRING,
-    PUNCTUATION,
+    PUNCTUATION,  // ( , ) ;
     DELETE,
     END_OF_TOKENS
 }
