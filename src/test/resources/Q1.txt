@@ -1,6 +1,1 @@
-let Abs n = 
-    n gr 0 -> 'Positive' 
-    | n ls 0 -> 'Negative' 
-    | 'Zero'
-in 
-    Print(Abs (-4))
+let in let in let in let in
