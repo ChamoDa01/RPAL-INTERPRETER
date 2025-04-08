@@ -2,7 +2,6 @@ package parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import lexicalanalyzer.Token;
@@ -11,21 +10,18 @@ import lexicalanalyzer.TokenType;
 public class Parser {
     private List<Token> tokenList;
     private List<Node> parseStack;
-    private ArrayList<String> stringAST;
 
     public Parser(List<Token> tokenList) {
         this.tokenList = tokenList;
         parseStack = new ArrayList<>();
-        stringAST = new ArrayList<>();
     }
 
     public void parse() {
         tokenList.add(new Token(TokenType.END_OF_TOKENS, ""));
         E();
         if (tokenList.getFirst().getTokenType().equals(TokenType.END_OF_TOKENS)) {
-            System.out.println(tokenList.getFirst().getTokenType());
-            Node root = parseStack.removeFirst();
-            //printPreOrderTraversal(root);
+            Node root = parseStack.getFirst();
+            printPreOrderTraversal(root);
         } else {
             System.out.println("Parsing Unsuccessful!");
         }
@@ -416,6 +412,7 @@ public class Parser {
 
             }
     }
+
     void build_tree(Node node) {
         int childrenCount = node.getChildrenCount();
         List<Node> children = new ArrayList<>();
@@ -423,9 +420,8 @@ public class Parser {
             children.add(0, parseStack.remove(parseStack.size() - 1)); // Pop from stack and add to children
         }
         node.setChildren(children); // Set the children to the node
+
         parseStack.add(node); // Add the parent node back to the stack
-        printPreOrderTraversal(node);
-        System.out.println("--------------------------------------");
     }
 
     public void printPreOrderTraversal(Node root) {
@@ -447,7 +443,5 @@ public class Parser {
             preOrderTraversal(child,level+"."); // Recursively traverse the children
         }
     }
-
-        
  
 }
