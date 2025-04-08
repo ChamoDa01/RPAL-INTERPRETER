@@ -437,11 +437,33 @@ public class Parser {
         if (node == null) {
             return;
         }
-        System.out.printf(level);
-        System.out.println(node.getValue()); // Print the current node
+        System.out.println(formatNode(level, node)); // Print the current node
         for (Node child : node.getChildren()) {
             preOrderTraversal(child,level+"."); // Recursively traverse the children
         }
     }
+
+    String formatNode(String dots, Node node) {
+		switch (node.getType()) {
+			case NodeType.IDENTIFIER:
+				return dots + "<ID:" + node.getValue() + ">";
+			case NodeType.INTEGER:
+				return dots + "<INT:" + node.getValue() + ">";
+			case NodeType.STRING:
+				return dots + "<STR:" + node.getValue() + ">";
+			case NodeType.TRUE:
+				return dots + "<" + node.getValue() + ">";
+			case NodeType.FALSE:
+				return dots + "<" + node.getValue() + ">";
+			case NodeType.NIL:
+				return dots + "<" + node.getValue() + ">";
+			case NodeType.DUMMY:
+				return dots + "<" + node.getValue() + ">";
+			case NodeType.FCN_FORM:
+				return dots + "function_form";
+			default:
+				return dots + node.getValue();
+		}
+	}
  
 }

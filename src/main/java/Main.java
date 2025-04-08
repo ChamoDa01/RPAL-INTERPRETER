@@ -1,11 +1,7 @@
 import lexicalanalyzer.LexicalAnalyzer;
 import lexicalanalyzer.Token;
-import lexicalanalyzer.TokenType;
-import parser.Node;
-import parser.NodeType;
 import parser.Parser;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class Main {
