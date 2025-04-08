@@ -19,63 +19,49 @@ public class Parser {
         stringAST = new ArrayList<>();
     }
 
-    public Node parse() {
+    public void parse() {
         tokenList.add(new Token(TokenType.END_OF_TOKENS, ""));
         E();
         if (tokenList.getFirst().getTokenType().equals(TokenType.END_OF_TOKENS)) {
-            return parseStack.removeFirst();
+            System.out.println(tokenList.getFirst().getTokenType());
+            Node root = parseStack.removeFirst();
+            //printPreOrderTraversal(root);
         } else {
             System.out.println("Parsing Unsuccessful!");
-            return null;
         }
     }
 
-    void E() {
-        int n;
-        boolean parsing = true;
+	void E() {
 
-        while (parsing) {
-            n = 0;
-            Token token = tokenList.getFirst();
+		int n = 0;
+		Token token = tokenList.get(0);
+		if (token.getTokenType().equals(TokenType.KEYWORD) && Arrays.asList("let", "fn").contains(token.getTokenValue())) {
+			if (token.getTokenValue().equals("let")) {
+				tokenList.remove(0);
+				D();
+				if (!tokenList.get(0).getTokenValue().equals("in")) {
+					System.out.println("Parse error at E : 'in' Expected");
+				}
+				tokenList.remove(0);
+				E();
+				build_tree(new Node(NodeType.LET, "let", 2));
 
-            if (token.getTokenType().equals(TokenType.KEYWORD) && Arrays.asList("let", "fn").contains(token.getTokenValue())) {
-
-                if (token.getTokenValue().equals("let")) {
-                    tokenList.removeFirst();
-                    D();
-
-                    if (!tokenList.getFirst().getTokenValue().equals("in")) {
-                        System.out.println("Parse error at E : 'in' Expected");
-                        return;
-                    }
-                    tokenList.removeFirst();
-                    continue;  // loop to parse E again
-
-                } else { // fn
-                    tokenList.removeFirst();
-                    do {
-                        Vb();
-                        n++;
-                    } while (tokenList.getFirst().getTokenType().equals(TokenType.IDENTIFIER)
-                            || tokenList.getFirst().getTokenValue().equals("("));
-
-                    if (!tokenList.getFirst().getTokenValue().equals(".")) {
-                        System.out.println("Parse error at E : '.' Expected");
-                        return;
-                    }
-                    tokenList.removeFirst();
-                    continue;  // loop to parse E again
-                }
-            } else {
-                parsing = false;  // No more let/fn → break loop → parse Ew
-            }
-        }
-
-        Ew();  // Handle Ew when no let/fn found
-
-        // Build tree for let/fn if applicable
-        // (optional - if tree building is outside loop logic)
-    }
+			} else {
+				tokenList.remove(0);
+				do {
+					Vb();
+					n++;
+				} while (tokenList.get(0).getTokenType().equals(TokenType.IDENTIFIER) || tokenList.get(0).getTokenValue().equals("("));
+				if (!tokenList.get(0).getTokenValue().equals(".")) {
+					System.out.println("Parse error at E : '.' Expected");
+				}
+				tokenList.remove(0);
+				E();
+				build_tree(new Node(NodeType.LAMBDA, "lambda", n + 1));
+			}
+		} else
+			Ew();
+	}
 
 
 
@@ -438,13 +424,30 @@ public class Parser {
         }
         node.setChildren(children); // Set the children to the node
         parseStack.add(node); // Add the parent node back to the stack
+        printPreOrderTraversal(node);
+        System.out.println("--------------------------------------");
     }
 
-    
-    public List<Node> getParseStack() {
-        return Collections.unmodifiableList(parseStack);
+    public void printPreOrderTraversal(Node root) {
+        if (root == null) {
+            return;
+        }
+        if (!parseStack.isEmpty()) {
+            preOrderTraversal(root,"");
+        }
+        }
+
+        private void preOrderTraversal(Node node,String level) {
+        if (node == null) {
+            return;
+        }
+        System.out.printf(level);
+        System.out.println(node.getValue()); // Print the current node
+        for (Node child : node.getChildren()) {
+            preOrderTraversal(child,level+"."); // Recursively traverse the children
+        }
     }
 
-    
+        
  
 }
