@@ -1,14 +1,20 @@
 package parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Node {
-    private String value;
-    private NodeType type;
-    private int childrenCount;
+    private final String value;
+    private final NodeType type;
+    private final int childrenCount;
+
+    private List<Node> children;
 
     public Node(NodeType type, String value, int childrenCount) {
         this.type = type;
         this.value = value;
         this.childrenCount = childrenCount;
+        this.children = new ArrayList<Node>(childrenCount);
     }
 
     public NodeType getType() {
@@ -23,5 +29,28 @@ public class Node {
         return childrenCount;
     }
 
+    public List<Node> getChildren() {
+        return children;
+    }
 
+    public void addChild(Node child) {
+        if (children.size() < childrenCount) {
+            children.add(child);
+        } else {
+            throw new IllegalStateException("Cannot add more children to this node.");
+        }
+    }
+
+    public void setChildren(List<Node> children) {
+        if (children.size() == childrenCount) {
+            this.children = children;
+        } else {
+            throw new IllegalArgumentException("Number of children does not match the expected count.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

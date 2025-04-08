@@ -1,6 +1,6 @@
-let Abs n = 
-    n gr 0 -> 'Positive' 
-    | n ls 0 -> 'Negative' 
+let Abs n =
+    n gr 0 -> 'Positive'
+    | n ls 0 -> 'Negative'
     | 'Zero'
-in 
+in
     Print(Abs (-4))
