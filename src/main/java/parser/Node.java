@@ -7,14 +7,13 @@ public class Node {
     private final String value;
     private final NodeType type;
     private final int childrenCount;
-
     private List<Node> children;
 
     public Node(NodeType type, String value, int childrenCount) {
         this.type = type;
         this.value = value;
         this.childrenCount = childrenCount;
-        this.children = new ArrayList<Node>(childrenCount);
+        this.children = new ArrayList<>(childrenCount);
     }
 
     public NodeType getType() {
@@ -51,6 +50,10 @@ public class Node {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Node{" +
+                "value='" + value + '\'' +
+                ", type=" + type +
+                ", childrenCount=" + childrenCount +
+                '}';
     }
 }
