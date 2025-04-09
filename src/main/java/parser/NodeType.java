@@ -32,5 +32,6 @@ public enum NodeType {
     AND,
     EQUAL,
     COMMA,
+    YSTAR,
     EMPTY_PARAMS
 }
