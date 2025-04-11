@@ -22,7 +22,6 @@ public class Parser {
         if (tokenList.getFirst().getTokenType().equals(TokenType.END_OF_TOKENS)) {
             return parseStack.getFirst();
         } else {
-            System.out.println("Parsing Unsuccessful!");
             throw new RuntimeException("Parsing Unsuccessful!");
         }
     }
@@ -426,35 +425,5 @@ public class Parser {
         node.setChildren(children); // Set the children to the node
 
         parseStack.add(node); // Add the parent node back to the stack
-    }
-
-    public void printPreOrderTraversal(Node root) {
-        if (root == null) {
-            return;
-        }
-        if (!parseStack.isEmpty()) {
-            preOrderTraversal(root, "");
-        }
-    }
-
-    private void preOrderTraversal(Node node, String level) {
-        if (node == null) {
-            return;
-        }
-        System.out.println(formatNode(level, node)); // Print the current node
-        for (Node child : node.getChildren()) {
-            preOrderTraversal(child, level + "."); // Recursively traverse the children
-        }
-    }
-
-    String formatNode(String dots, Node node) {
-        return switch (node.getType()) {
-            case NodeType.IDENTIFIER -> dots + "<ID:" + node.getValue() + ">";
-            case NodeType.INTEGER -> dots + "<INT:" + node.getValue() + ">";
-            case NodeType.STRING -> dots + "<STR:" + node.getValue() + ">";
-            case NodeType.TRUE, NodeType.DUMMY, NodeType.FALSE, NodeType.NIL -> dots + "<" + node.getValue() + ">";
-            case NodeType.FCN_FORM -> dots + "function_form";
-            default -> dots + node.getValue();
-        };
     }
 }
