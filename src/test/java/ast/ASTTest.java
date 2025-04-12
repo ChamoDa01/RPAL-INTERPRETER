@@ -36,7 +36,7 @@ public class ASTTest {
     @Test
     void testST() throws URISyntaxException{
         // Get the path of the test file
-        String testFilePath = getResourceFilePath("Test-5.txt");
+        String testFilePath = getResourceFilePath("Q6.txt");
         assertNotNull(testFilePath, "Test file not found!");
 
         // Run lexer

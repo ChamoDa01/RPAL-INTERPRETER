@@ -31,7 +31,7 @@ public class Rator extends Symbol{
 
     public Symbol apply(Symbol arg1, Symbol arg2) {
         if(arg1 instanceof StringValue str1 && arg2 instanceof StringValue str2){
-            return new StringValue(str1.getValue() + " " + str2.getValue());
+            return new StringValue(str1.getValue() + str2.getValue());
         } else {
             throw new RuntimeException("Invalid arguments for " + name);
         }

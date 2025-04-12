@@ -10,58 +10,73 @@ public class BinaryOp extends Symbol {
         this.operator = operator;
     }
 
-    public Symbol apply(Symbol arg1, Symbol arg2) {
-        if (arg1 instanceof IntValue && arg2 instanceof IntValue) {
-            int val1 = ((IntValue) arg1).getValue();
-            int val2 = ((IntValue) arg2).getValue();
+    public Symbol apply(final Symbol arg1, final Symbol arg2) {
+        if (arg1 instanceof IntValue int1 && arg2 instanceof IntValue int2) {
+            int val1 = int1.getValue();
+            int val2 = int2.getValue();
 
-            switch (operator) {
-                case "+":
-                    return new IntValue(val1 + val2);
-                case "-":
-                    return new IntValue(val1 - val2);
-                case "*":
-                    return new IntValue(val1 * val2);
-                case "/":
-                    return new IntValue(val1 / val2);
-                case "**":
-                    return new IntValue((int) Math.pow(val1, val2));
-                case "gr":
-                    return new BoolValue(val1 > val2);
-                case "ge":
-                    return new BoolValue(val1 >= val2);
-                case "eq":
-                    return new BoolValue(val1 == val2);
-                case "ne":
-                    return new BoolValue(val1 != val2);
-                case "le":
-                    return new BoolValue(val1 <= val2);
-                case "ls":
-                    return new BoolValue(val1 < val2);
-            }
-        } else if (operator.equals("eq") && arg1 instanceof StringValue str1 && arg2 instanceof StringValue str2) {
-            // handle equality for String
-            return new BoolValue(str1.getValue().equals(str2.getValue()));
-        } else if (operator.equals("aug")) {
-            if (arg1 instanceof Tuple tuple) {
-                List<Symbol> newTuple = new ArrayList<>(tuple.getValues());
-                newTuple.add(arg2);
-                return new Tuple(newTuple);
-            } else {
-                // convert to tuple if it's a single value
-                List<Symbol> newTuple = new ArrayList<>();
-                newTuple.add(arg1);
-                newTuple.add(arg2);
-                return new Tuple(newTuple);
-            }
-        } else if (arg1 instanceof BoolValue bool1 && arg2 instanceof BoolValue bool2) {
-            if(operator.equals("&")) {
-                return new BoolValue(bool1.getValue() && bool2.getValue());
-            } else if (operator.equals("or")) {
-                return new BoolValue(bool1.getValue() || bool2.getValue());
-            }
+            return switch (operator) {
+                case "+" -> new IntValue(val1 + val2);
+                case "-" -> new IntValue(val1 - val2);
+                case "*" -> new IntValue(val1 * val2);
+                case "/" -> new IntValue(val1 / val2);
+                case "**" -> new IntValue((int) Math.pow(val1, val2));
+                case "gr" -> new BoolValue(val1 > val2);
+                case "ge" -> new BoolValue(val1 >= val2);
+                case "eq" -> new BoolValue(val1 == val2);
+                case "ne" -> new BoolValue(val1 != val2);
+                case "le" -> new BoolValue(val1 <= val2);
+                case "ls" -> new BoolValue(val1 < val2);
+                default -> throw new RuntimeException("Invalid argument types for operator (" + operator + "): " + arg1 + ", " + arg2);
+            };
         }
-        throw new RuntimeException("Invalid arguments for operator: " + operator);
+
+        if (arg1 instanceof StringValue str1 && arg2 instanceof StringValue str2) {
+            String val1 = str1.getValue();
+            String val2 = str2.getValue();
+
+            return switch (operator) {
+                case "eq" -> new BoolValue(val1.equals(val2));
+                case "ne" -> new BoolValue(!val1.equals(val2));
+                case "aug" -> {
+                    List<Symbol> tuple = new ArrayList<>();
+                    if ("nil".equals(val1)) {
+                        tuple.add(str2);
+                    } else {
+                        tuple.add(str1);
+                        tuple.add(str2);
+                    }
+                    yield new Tuple(tuple);
+                }
+                default -> throw new RuntimeException("Invalid argument types for operator (" + operator + "): " + arg1 + ", " + arg2);
+            };
+        }
+
+        if ("aug".equals(operator)) {
+            List<Symbol> tuple = new ArrayList<>();
+            if (arg1 instanceof Tuple t) {
+                tuple.addAll(t.getValues());
+                tuple.add(arg2);
+                return new Tuple(tuple);
+            }
+            if (arg1 instanceof StringValue s && "nil".equals(s.getValue())) {
+                tuple.add(arg2);
+                return new Tuple(tuple);
+            }
+            tuple.add(arg1);
+            tuple.add(arg2);
+            return new Tuple(tuple);
+        }
+
+        if (arg1 instanceof BoolValue b1 && arg2 instanceof BoolValue b2) {
+            return switch (operator) {
+                case "&" -> new BoolValue(b1.getValue() && b2.getValue());
+                case "or" -> new BoolValue(b1.getValue() || b2.getValue());
+                default -> throw new RuntimeException("Invalid argument types for operator (" + operator + "): " + arg1 + ", " + arg2);
+            };
+        }
+
+        throw new RuntimeException("Invalid argument types for operator (" + operator + "): " + arg1 + ", " + arg2);
     }
 
     @Override

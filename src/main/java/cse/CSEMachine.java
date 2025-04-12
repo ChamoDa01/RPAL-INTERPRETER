@@ -349,7 +349,7 @@ public class CSEMachine {
             case NodeType.EMPTY_PARAMS:
                 break;
             case NodeType.NIL:
-                currentControl.add(new Identifier("nil"));
+                currentControl.add(new StringValue("nil"));
                 break;
             default:
                 throw new RuntimeException("Unsupported node type: " + node.getType());
