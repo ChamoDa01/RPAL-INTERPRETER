@@ -1,0 +1,2 @@
+let Greet name = 'Hello' @Conc name
+in Print (Greet 'Harvey')
