@@ -23,6 +23,7 @@ public class Main {
             List<Token> tokens = lexicalAnalyzer.tokenize();
             Parser parser = new Parser(tokens);
             AST ast = new AST(parser.parse());
+            ast.standardize();
             StandardizedAST st = new StandardizedAST(ast.getRoot());
             CSEMachine cseMachine = new CSEMachine(st.getRoot());
 
