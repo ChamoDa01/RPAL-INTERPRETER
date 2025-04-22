@@ -6,4 +6,4 @@ where rec Reverse n r =
     n eq 0 -> r
     | Reverse (n / 10) (r * 10 + (n - (n/10) * 10))
 in 
-    Pal_range 1 100
+    Pal_range 1000 100
