@@ -22,6 +22,6 @@ public class Tuple extends Symbol {
 
     @Override
     public String toString() {
-        return "Tuple" + values;
+        return String.valueOf(values);
     }
 }

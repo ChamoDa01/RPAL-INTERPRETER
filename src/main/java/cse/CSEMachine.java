@@ -29,7 +29,7 @@ public class CSEMachine {
         createControlStructures(rootNode);
     }
 
-    public Map<Integer, List<Symbol>> getControlStructures() {
+     Map<Integer, List<Symbol>> getControlStructures() {
         return controlStructures;
     }
 
@@ -44,14 +44,14 @@ public class CSEMachine {
         while (!control.isEmpty()) {
 
             // TODO: remove after finished --------------------
-            for (Symbol symbol : control) {
-                System.out.print(symbol + " ");
-            }
-            System.out.println();
-            for (Symbol symbol : stack){
-                System.out.print(symbol + " ");
-            }
-            System.out.println("\n");
+//            for (Symbol symbol : control) {
+//                System.out.print(symbol + " ");
+//            }
+//            System.out.println();
+//            for (Symbol symbol : stack){
+//                System.out.print(symbol + " ");
+//            }
+//            System.out.println("\n");
             // TODO: ------------------------------------------
 
             Symbol controlItem = control.removeLast();

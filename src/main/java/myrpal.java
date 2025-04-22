@@ -2,12 +2,11 @@ import lexicalanalyzer.LexicalAnalyzer;
 import lexicalanalyzer.Token;
 import parser.Parser;
 import ast.AST;
-import ast.StandardizedAST;
 import cse.CSEMachine;
 
 import java.util.List;
 
-public class Main {
+public class myrpal {
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Usage:");
@@ -24,10 +23,10 @@ public class Main {
             Parser parser = new Parser(tokens);
             AST ast = new AST(parser.parse());
             ast.standardize();
-            StandardizedAST st = new StandardizedAST(ast.getRoot());
-            CSEMachine cseMachine = new CSEMachine(st.getRoot());
+            CSEMachine cseMachine = new CSEMachine(ast.getStandardizedRoot());
 
             if (args.length == 1) {
+                System.out.println("Output of the above program is:");
                 System.out.println(cseMachine.evaluate());
             } else if (args.length == 2) {
                 switch (args[0].toLowerCase()) {

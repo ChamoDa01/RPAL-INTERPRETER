@@ -5,4 +5,4 @@ where rec Reverse n r =
     n eq 0 -> r
     | Reverse (n / 10) (r * 10 + (n - (n/10) * 10))
 in 
-    Print(isPal 14321)
+    Print(isPal 12321)
