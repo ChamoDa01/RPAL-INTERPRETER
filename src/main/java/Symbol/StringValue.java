@@ -26,6 +26,6 @@ public class StringValue extends Symbol {
 
     @Override
     public String toString() {
-        return value;
+        return value.replace("\\n", "\n");
     }
 }

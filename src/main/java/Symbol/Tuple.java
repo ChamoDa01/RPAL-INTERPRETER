@@ -22,6 +22,6 @@ public class Tuple extends Symbol {
 
     @Override
     public String toString() {
-        return String.valueOf(values);
+        return values.toString().replace('[', '(').replace(']', ')');
     }
 }

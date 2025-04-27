@@ -1,0 +1,5 @@
+let findNegPos N =
+    N eq 0 -> 'Neither Negative and Positive' | N < 0 -> 'Negative' | 'Positive'
+in
+Print(findNegPos (-3))
+//Prints Negative

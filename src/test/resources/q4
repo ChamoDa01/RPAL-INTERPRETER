@@ -1,0 +1,5 @@
+let rec findFactorial n =
+    n eq 1 -> 1 | n * findFactorial (n-1)
+in
+Print (findFactorial 6)
+// Prints 720

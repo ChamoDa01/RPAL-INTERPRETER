@@ -1,0 +1,7 @@
+let rec f n = n eq 1 -> 0 | n eq 2 -> 1 | f (n-1) + f (n-2) 
+in
+let rec findFibonacci m n = n eq m -> nil 
+    | (findFibonacci m (n-1) aug f (n)) 
+in
+Print (findFibonacci 7 12)
+//Prints (13, 21, 34, 55, 89)

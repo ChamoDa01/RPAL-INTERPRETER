@@ -20,7 +20,7 @@ public class CSEMachineTest {
     @Test
     void testControlStructures() throws URISyntaxException {
         // Get the path of the test file
-        String testFilePath = getResourceFilePath("Q2.txt");
+        String testFilePath = getResourceFilePath("conc.1");
         assertNotNull(testFilePath, "Test file not found!");
 
         // Run lexer
@@ -51,7 +51,7 @@ public class CSEMachineTest {
     @Test
     void testEvaluate() throws URISyntaxException {
         // Get the path of the test file
-        String testFilePath = getResourceFilePath("Test-4.txt");
+        String testFilePath = getResourceFilePath("q3");
         assertNotNull(testFilePath, "Test file not found!");
 
         // Run lexer
