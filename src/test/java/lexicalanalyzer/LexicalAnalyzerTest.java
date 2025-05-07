@@ -14,7 +14,7 @@ public class LexicalAnalyzerTest {
     @Test
     void testTokenization() throws URISyntaxException {
         // Get the path of the test file
-        String testFilePath = getResourceFilePath("Test-5.txt");
+        String testFilePath = getResourceFilePath("conc.1");
         assertNotNull(testFilePath, "Test file not found!");
 
         // Run lexer

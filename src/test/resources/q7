@@ -1,0 +1,4 @@
+let findOddEven N = (N/2) eq ((N-1)/2) -> 'Odd' | 'Even'
+in
+Print(findOddEven (157))
+///Prints Odd

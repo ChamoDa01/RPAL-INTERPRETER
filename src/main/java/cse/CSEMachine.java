@@ -67,8 +67,8 @@ public class CSEMachine {
                 if (controlItem instanceof Identifier id) {
                     List<String> rators = List.of("Print", "Conc", "Stem", "Stern", "Order",
                             "Isinteger", "Isstring", "Istuple", "Isdummy", "Istruthvalue", "Isfunction",
-                            "Itos", "Null");
-                    if (rators.contains(id.getName())) {
+                            "ItoS", "Null");
+                    if (rators.stream().anyMatch(r -> r.equalsIgnoreCase(id.getName()))) {
                         // Handle built-in functions
                         stack.push(new Rator(id.getName()));
                     } else {

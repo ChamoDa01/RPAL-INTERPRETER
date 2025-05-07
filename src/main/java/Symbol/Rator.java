@@ -14,7 +14,7 @@ public class Rator extends Symbol{
     //TODO: case "Isdummy" -> arg instanceof Dummy ? new BoolValue(true) : new BoolValue(false);
     public Symbol apply(Symbol arg) {
         return switch (name){
-            case "Print" -> arg;
+            case "Print","print" -> arg;
             case "Stem" -> stem(arg);
             case "Stern" -> stern(arg);
             case "Order" -> order(arg);
@@ -23,7 +23,7 @@ public class Rator extends Symbol{
             case "Istuple" -> arg instanceof Tuple ? new BoolValue(true) : new BoolValue(false);
             case "Istruthvalue" -> arg instanceof BoolValue ? new BoolValue(true) : new BoolValue(false);
             case "Isfunction" -> arg instanceof Delta ? new BoolValue(true) : new BoolValue(false);
-            case "Itos" -> itos(arg);
+            case "ItoS" -> itos(arg);
             case "Null" -> isNullTuple(arg);
             default -> throw new RuntimeException("Unknown rator: " + name);
         };

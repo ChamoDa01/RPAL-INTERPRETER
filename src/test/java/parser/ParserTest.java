@@ -15,7 +15,7 @@ public class ParserTest {
     @Test
     void testParsing() throws URISyntaxException {
         // Get the path of the test file
-        String testFilePath = getResourceFilePath("Q7.txt");
+        String testFilePath = getResourceFilePath("conc.1");
         assertNotNull(testFilePath, "Test file not found!");
 
         // Run lexer

@@ -1,0 +1,9 @@
+let rec getReverse n m = (n - (n/10)*10) eq 0 -> m |  getReverse (n/10) (m*10 + n - (n/10)*10) 
+in
+let findPalindrome x T = (x eq getReverse x 0) -> (T aug x) | T 
+in
+let rec getNumbers s e T = s eq e -> T | getNumbers (s+1) e (findPalindrome s T) 
+in
+let findPalindromInRange s e = getNumbers s e nil
+in print(findPalindromInRange 10 100)
+// prints (11, 22, 33, 44, 55, 66, 77, 88, 99)

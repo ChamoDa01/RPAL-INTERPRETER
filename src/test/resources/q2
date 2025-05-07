@@ -1,0 +1,4 @@
+let g T = (T 1) ge (T 2) -> (T 1) ge (T 3) -> (T 1) | (T 3) |
+		 (T 2) ge (T 3) -> (T 2) | (T 3)
+in print(g (5,20,10))
+//Prints 20

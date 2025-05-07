@@ -1,0 +1,4 @@
+let rec f n = n eq 0 -> 0  | f (n-1) + n 
+in
+Print ( f 8 )
+//Prints 36
