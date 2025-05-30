@@ -44,14 +44,14 @@ public class CSEMachine {
         while (!control.isEmpty()) {
 
             // TODO: remove after finished --------------------
-//            for (Symbol symbol : control) {
-//                System.out.print(symbol + " ");
-//            }
-//            System.out.println();
-//            for (Symbol symbol : stack){
-//                System.out.print(symbol + " ");
-//            }
-//            System.out.println("\n");
+            for (Symbol symbol : control) {
+                System.out.print(symbol + " ");
+            }
+            System.out.println();
+            for (Symbol symbol : stack){
+                System.out.print(symbol + " ");
+            }
+            System.out.println("\n");
             // TODO: ------------------------------------------
 
             Symbol controlItem = control.removeLast();
@@ -61,7 +61,8 @@ public class CSEMachine {
                     controlItem instanceof IntValue ||
                     controlItem instanceof StringValue ||
                     controlItem instanceof BoolValue ||
-                    controlItem instanceof Ystar)
+                    controlItem instanceof Ystar ||
+                    controlItem instanceof Tuple)
             {
                 // Rule 1: Stack a name
                 if (controlItem instanceof Identifier id) {
@@ -349,7 +350,7 @@ public class CSEMachine {
             case NodeType.EMPTY_PARAMS:
                 break;
             case NodeType.NIL:
-                currentControl.add(new StringValue("nil"));
+                currentControl.add(new Tuple(Collections.emptyList()));
                 break;
             default:
                 throw new RuntimeException("Unsupported node type: " + node.getType());
