@@ -22,7 +22,7 @@ public class Rator extends Symbol{
             case "Isstring" -> arg instanceof StringValue ? new BoolValue(true) : new BoolValue(false);
             case "Istuple" -> arg instanceof Tuple ? new BoolValue(true) : new BoolValue(false);
             case "Istruthvalue" -> arg instanceof BoolValue ? new BoolValue(true) : new BoolValue(false);
-            case "Isfunction" -> arg instanceof Delta ? new BoolValue(true) : new BoolValue(false);
+            case "Isfunction" -> (arg instanceof Eta || arg instanceof Lambda) ? new BoolValue(true) : new BoolValue(false);
             case "ItoS" -> itos(arg);
             case "Null" -> isNullTuple(arg);
             default -> throw new RuntimeException("Unknown rator: " + name);
