@@ -48,8 +48,11 @@ make clean
 
 ## 🪟 Running on Windows
 ### 📦 Latest Release
-- **For Windows users, a precompiled executable is included.**
-- **Windows Executable:** [`myrpal.exe`](./myrpal.exe)
+For Windows users, a precompiled executable is included.**
+- **Version:** [v1.0.2](https://github.com/ChamoDa01/RPAL-INTERPRETER/releases/tag/v1.0.2)
+- **Executable:** [myrpal.exe](https://github.com/ChamoDa01/RPAL-INTERPRETER/releases/download/v1.0.2/myrpal.exe)
+- **Release Date:** June 2025
+- **Requirements:** JDK 21+
   
 ### Run
 ```bash
