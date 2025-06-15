@@ -1,59 +1,65 @@
-# RPAL Compiler
+# RPAL Compiler 
 
-An RPAL (Right-reference Pure Applicative Language) Compiler implemented in Java — built as part of a Programming Languages coursework/project.
+An RPAL (Right-reference Pure Applicative Language) Compiler implemented in Java, built as part of a Programming Languages project.
 
 This compiler takes RPAL source code as input and produces an Abstract Syntax Tree (AST), a Standardized Tree (ST), and further generates control structures for the CSE (Control Stack Environment) Machine.
 
----
+## 📁 Project Structure
 
-## Table of Contents
+```
+RPAL-INTERPRETER/
+├── src/
+│ └── main/java/ # Source code
+│ └── test/java/ # Unit test code
+├── out/ # Compiled .class files
+├── Makefile # For compiling and running
+├── myrpal.exe # Windows executable
+```
 
-- [About RPAL](#about-rpal)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Grammar Rules](#grammar-rules)
-- [Technologies Used](#technologies-used)
-- [Project Structure](#project-structure)
-- [Build & Run](#build--run)
-- [Usage](#usage)
-- [Example](#example)
-- [Error Handling](#error-handling)
-- [Contributors](#contributors)
+## ⚙️ How to Build and Run
 
----
+### Prerequisites
 
-## About RPAL
+- Java JDK (21 or later)
+- `make` utility
 
-RPAL is a purely functional programming language designed for teaching compiler design and functional programming concepts.  
-It supports:
+### Compile the project
 
-- Lambda Calculus Constructs
-- Function Definitions
-- Conditional Expressions
-- Recursive Bindings
-- List Manipulation
-- Operators (arithmetic, boolean, comparison)
+```bash
+make
+```
 
----
+### Run the interpreter on a file
+```bash
+make runfile FILE=path/to/input
+```
 
-## Features
+### Run with -ast/-st to print the AST/ST
+```bash
+make runast FILE=path/to/input
+make runst FILE=path/to/input
+```
 
-- Lexical Analysis → Token Generation
-- Syntax Analysis → Parse Tree & Abstract Syntax Tree (AST) Construction
-- Tree Standardization → Standard Tree (ST) Creation
-- CSE Machine Code Generation → Control Structures
-- Error Handling → Descriptive Parse Errors
-- Supports:
-  - Operators: +, -, *, /, >=, <=, =, >, <, etc.
-  - Keywords: let, in, fn, where, within, etc.
-  - Function Definitions
-  - Recursive Constructs
-  - Augmentations
-  - Conditionals
-  - Logical Operators: and, or, not
-  - List Handling
+### Clean the build
+```bash
+make clean
+```
 
----
 
-## Architecture
+## 🪟 Running on Windows
+### 📦 Latest Release
+- **For Windows users, a precompiled executable is included.**
+- **Windows Executable:** [`myrpal.exe`](./myrpal.exe)
+  
+### Run
+```bash
+.\myrpal.exe file_name
+```
 
+### To print AST/ST:
+```bash
+.\myrpal.exe -ast file_name
+.\myrpal.exe -st file_name
+```
+
+Make sure your system has Java installed (JDK 21 or later) and myrpal.exe is in the same folder as the input file or added to your PATH.
